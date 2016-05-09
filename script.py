@@ -1,48 +1,7 @@
 import urllib
 from bs4 import BeautifulSoup
 import json
-from daytime import daytime
-
-# from selenium import webdriver
-# from selenium.webdriver.common.keys import Keys
-#
-# driver = webdriver.Firefox()
-#
-# # functions for post_object values
-# #
-# #
-# # open browser to posting page with Selenium
-# def open_browser (link):
-#     driver.get("https://tallahassee.craigslist.org" + link)
-#
-# # click the reply button
-# def click_reply ():
-#     try:
-#         reply_btn = driver.find_element_by_class_name('reply_button')
-#         reply_btn.click()
-#         return True
-#     except:
-#         return False
-#         pass
-#
-# # wait until popup loads with info and print info
-# def get_reply_info (button_exists):
-#     if button_exists:
-#         isLoaded = False
-#         while not isLoaded:
-#             div = driver.find_element_by_class_name('returnemail')
-#             if div.get_attribute('style') == 'display: block;':
-#                 isLoaded = True
-#                 email = driver.find_element_by_class_name('mailapp').text
-#                 reply = {
-#                     'email': email
-#                 }
-#                 return reply
-#     else:
-#         reply = {
-#             'text': 'N/A',
-#             'email': 'N/A'
-#         }
+from datetime import datetime
 
 
 
@@ -90,16 +49,6 @@ for post in soup.find_all('a', class_ = 'hdrlnk')[:10]:
 
     link = post['href']                                 # url extension for specific posting page
 
-
-    # # SELENIUM run through
-    # open_browser(link)
-    # button_exists = click_reply()
-    # post_object = {
-    #     'reply': get_reply_info(button_exists)
-    # }
-
-
-    # BS4 run through
     # get document from individual posting's page
     post_page = urllib.urlopen("https://tallahassee.craigslist.org" + link).read()      # open individual posting page
     post_soup = BeautifulSoup(post_page, 'lxml')                                        # souped posting page
