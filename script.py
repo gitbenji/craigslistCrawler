@@ -11,8 +11,11 @@ from datetime import datetime
 # get string of formatted date and time the posting was created
 def getCreated (post_soup):
     p = post_soup.find_all(class_='postinginfo')[2]
-    splitPSoup = p.find('time')['datetime'].split('T')      # element time, attribute datetime: '2016-05-06T13:42:50-0400'
-    return splitPSoup[0] + ' ' + splitPSoup[1]              # returns string with ' ' instead of 'T'
+    utc_date = p.find('time')['datetime']
+    print utc_date
+    print datetime.strptime(utc_date, '%Y-%m-%dT%H:%M:%S %z')
+    # splitPSoup = p.find('time')['datetime'].split('T')      # element time, attribute datetime: '2016-05-06T13:42:50-0400'
+    # return splitPSoup[0] + ' ' + splitPSoup[1]              # returns string with ' ' instead of 'T'
 
 # get string of compensation rate for posting
 def getComp (post_soup):
@@ -71,4 +74,4 @@ for post in soup.find_all('a', class_ = 'hdrlnk')[:10]:
         'categories': getCategories(post_soup)
     }
 
-    print json.dumps(post_object, sort_keys=True, indent=4, separators=(',', ': '))
+    # print json.dumps(post_object, sort_keys=True, indent=4, separators=(',', ': '))
