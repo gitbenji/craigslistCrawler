@@ -11,3 +11,6 @@ def addPost (posting):
 
 def commitAll ():
     session.commit()
+
+def closeConnection ():
+    session.close()

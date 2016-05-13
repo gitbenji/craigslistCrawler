@@ -2,7 +2,7 @@
 import sqlalchemy
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, Text
+from sqlalchemy import Column, Integer, String, Text, DateTime
 from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
 
 engine = create_engine('sqlite:///craigslist.db')
@@ -13,14 +13,14 @@ Base = declarative_base()
 class Posting(Base):
     __tablename__ = 'postings'
 
-    id = Column(Text, primary_key=True, unique=False)
-    uri = Column(Text)
-    created = Column(Text)
+    id = Column(String, primary_key=True, unique=False)
+    uri = Column(String)
+    created = Column(DateTime)
     description = Column(Text)
-    title = Column(Text)
-    compensation = Column(Text)
-    employment_type = Column(Text)
-    meta = Column(Text)
-    categories = Column(Text)
+    title = Column(String)
+    compensation = Column(String)
+    employment_type = Column(String)
+    meta = Column(String)
+    categories = Column(String)
 
 Base.metadata.create_all(engine)

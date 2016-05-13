@@ -8,11 +8,8 @@ import session
 # get string of date created
 def getCreated (post_soup):
     p = post_soup.find_all(class_='postinginfo')[2]
-    # utc_date = p.find('time')['datetime']
-    # print utc_date
-    # print datetime.strptime(utc_date, '%Y-%m-%dT%H:%M:%S %z')
-    splitPSoup = p.find('time')['datetime'].split('T')      # element time, attribute datetime: '2016-05-06T13:42:50-0400'
-    return splitPSoup[0] + ' ' + splitPSoup[1]              # returns string with ' ' instead of 'T'
+    utc_date = p.find('time')['datetime'][:19]              # element time, attribute datetime: '2016-05-06T13:42:50-0400'
+    return datetime.strptime(utc_date, '%Y-%m-%dT%H:%M:%S')
 
 # get string of compensation rate for posting
 def getComp (post_soup):
@@ -24,7 +21,7 @@ def getEmp (post_soup):
     p = post_soup.find(class_='attrgroup')
     return p.find_all('b')[1].text
 
-# get array of meta details for posting
+# get string of meta details for posting
 def getMeta (post_soup):
     metas = ""
     ul = post_soup.find(class_='notices')
@@ -66,4 +63,8 @@ for post in soup.find_all('a', class_ = 'hdrlnk')[:10]:
 
     session.addPost(posting)
 
+# call session.py to commit
 session.commitAll()
+
+# call session.py to close
+session.closeConnection()
