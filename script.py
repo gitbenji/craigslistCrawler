@@ -8,8 +8,8 @@ import session
 # get string of date created
 def getCreated (post_soup):
     p = post_soup.find_all(class_='postinginfo')[2]
-    utc_date = p.find('time')['datetime'][:19]              # element time, attribute datetime: '2016-05-06T13:42:50-0400'
-    return datetime.strptime(utc_date, '%Y-%m-%dT%H:%M:%S')
+    utc_date = p.find('time')['datetime'][:19]                          # element time, attribute datetime: '2016-05-06T13:42:50-0400'
+    return datetime.strptime(utc_date, '%Y-%m-%dT%H:%M:%S')             # took out timezone because of sqlite
 
 # get string of compensation rate for posting
 def getComp (post_soup):
@@ -27,7 +27,7 @@ def getMeta (post_soup):
     ul = post_soup.find(class_='notices')
     for li in ul.find_all('li'):
         meta = li.text
-        metas = metas + meta + ", "
+        metas = metas + meta + ", "                                     # comma separated string of meta details
     return metas
 
 # get string of categories with '/' that posting is under
@@ -42,13 +42,13 @@ soup = BeautifulSoup(web_page, 'lxml')
 # run through each posting on listings page
 for post in soup.find_all('a', class_ = 'hdrlnk')[:10]:
 
-    link = post['href']             # url extension for specific posting page
+    link = post['href']                              # url extension for specific posting page
 
     # get document from individual posting's page
     post_page = urllib.urlopen("https://tallahassee.craigslist.org" + link).read()      # open individual posting page
     post_soup = BeautifulSoup(post_page, 'lxml')                                        # souped posting page
 
-
+    # variables for the data - to be sent through the model
     id = post_soup.find_all(class_='postinginfo')[1].text.split(': ', 1)[1]             # id is second appearance of class, read as 'posting id: #########'
     uri = "https://tallahassee.craigslist.org" + link
     created = getCreated(post_soup)
@@ -59,8 +59,10 @@ for post in soup.find_all('a', class_ = 'hdrlnk')[:10]:
     meta = getMeta(post_soup)
     categories = getCategories(post_soup)
 
+    # individual posting instance through the model
     posting = model.Posting(id = id, uri = uri, created = created, description = description, title = title, compensation = compensation, employment_type = employment_type, meta = meta, categories = categories)
 
+    # send posting to session
     session.addPost(posting)
 
 # call session.py to commit

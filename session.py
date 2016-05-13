@@ -6,8 +6,9 @@ Session = sessionmaker(bind=model.engine)
 
 session = Session()
 
+# merges ignores the postings which already exist
 def addPost (posting):
-    session.add(posting)
+    session.merge(posting)
 
 def commitAll ():
     session.commit()
