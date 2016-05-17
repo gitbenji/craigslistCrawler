@@ -14,7 +14,6 @@ session = Session()
 Base = declarative_base()
 
 
-# merges ignores the postings which already exist
 def addToDb(row):
     try:
         session.add(row)
@@ -25,16 +24,8 @@ def addToDb(row):
         session.commit()
 
 
-# merges ignores the postings which already exist
-def addPosting(row):
-    try:
-        session.add(row)
-        session.commit()
-    except IntegrityError:
-        session.rollback()
-        session.merge(row)
-    finally:
-        session.commit()
+def getFromDb(class_name, **kwargs):
+    return session.query(class_name).filter_by(**kwargs).first()
 
 
 def closeConnection():

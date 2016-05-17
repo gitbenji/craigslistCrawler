@@ -87,16 +87,18 @@ for post in soup.find_all('a', class_='hdrlnk')[:10]:
     from model import Category
 
     categories = getCategories(post_soup)
-    for category in categories:
-        posting.categories = category
+    for category_name in categories:
 
-        category = Category(category=category)
+        category = session.getFromDb(Category, name=category_name)
+        if not category:
+            category = Category(name=category_name)
+            session.addToDb(category)
 
         # send categories to session
-        session.addToDb(category)
+        posting.categories.append(category)
 
     # send posting to session
-    session.addPosting(posting)
+    session.addToDb(posting)
 
 # call session.py to close
 session.closeConnection()
