@@ -37,10 +37,10 @@ def getMeta(post_soup):
     return metas
 
 
-# get string of categories with '/' that posting is under
+# get array of categories that posting is under
 def getCategories(post_soup):
     li = post_soup.find(class_='crumb category')
-    return li.find('a').text
+    return li.find('a').text.split('/')
 
 
 # get document from listings page
@@ -62,7 +62,7 @@ for post in soup.find_all('a', class_='hdrlnk')[:10]:
 
     # variables for the data - to be sent through the model
     # id is second appearance of class, read as 'posting id: #########'
-    id = post_soup.find_all(class_='postinginfo')[1].text.split(': ', 1)[1]
+    uid = post_soup.find_all(class_='postinginfo')[1].text.split(': ', 1)[1]
     uri = "https://tallahassee.craigslist.org" + link
     created = getCreated(post_soup)
     description = post_soup.find(id='postingbody').text
@@ -70,26 +70,33 @@ for post in soup.find_all('a', class_='hdrlnk')[:10]:
     compensation = getComp(post_soup)
     employment_type = getEmp(post_soup)
     meta = getMeta(post_soup)
-    categories = getCategories(post_soup)
 
     from model import Posting
     # individual posting instance through the model
     posting = Posting(
-        id=id,
+        uid=uid,
         uri=uri,
         created=created,
         description=description,
         title=title,
         compensation=compensation,
         employment_type=employment_type,
-        meta=meta,
-        categories=categories)
+        meta=meta
+    )
+
+    from model import Category
+
+    categories = getCategories(post_soup)
+    for category in categories:
+        posting.categories = category
+
+        category = Category(category=category)
+
+        # send categories to session
+        session.addToDb(category)
 
     # send posting to session
-    session.addPost(posting)
-
-# call session.py to commit
-# session.commitAll()
+    session.addPosting(posting)
 
 # call session.py to close
 session.closeConnection()

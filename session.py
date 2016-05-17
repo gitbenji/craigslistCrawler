@@ -5,7 +5,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.exc import IntegrityError
 
 # select database file
-engine = create_engine('sqlite:///craigslist.db')
+engine = create_engine('postgresql://benji@localhost:5432/job_postings')
 engine.echo = True
 
 Session = sessionmaker(bind=engine)
@@ -15,14 +15,25 @@ Base = declarative_base()
 
 
 # merges ignores the postings which already exist
-def addPost(posting):
+def addToDb(row):
     try:
-        session.add(posting)
+        session.add(row)
         session.commit()
     except IntegrityError:
         session.rollback()
     finally:
-        session.merge(posting)
+        session.commit()
+
+
+# merges ignores the postings which already exist
+def addPosting(row):
+    try:
+        session.add(row)
+        session.commit()
+    except IntegrityError:
+        session.rollback()
+        session.merge(row)
+    finally:
         session.commit()
 
 
