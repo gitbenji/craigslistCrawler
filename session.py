@@ -20,6 +20,7 @@ def addToDb(row):
         session.commit()
     except IntegrityError:
         session.rollback()
+        session.merge(row)
     finally:
         session.commit()
 
