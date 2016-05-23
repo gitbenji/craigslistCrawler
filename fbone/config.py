@@ -47,10 +47,10 @@ class DefaultConfig(BaseConfig):
     # SQLALCHEMY_DATABASE_URI = 'sqlite:///' + INSTANCE_FOLDER_PATH + '/%s.sqlite' % BaseConfig.PROJECT
 
     # MySQL
-    SQLALCHEMY_DATABASE_URI = 'mysql://root@localhost/%s?charset=utf8' % BaseConfig.PROJECT
+    # SQLALCHEMY_DATABASE_URI = 'mysql://root@localhost/%s?charset=utf8' % BaseConfig.PROJECT
 
     # PostgreSQL
-    # SQLALCHEMY_DATABASE_URI = 'postgresql://root@localhost/%s' % BaseConfig.PROJECT
+    SQLALCHEMY_DATABASE_URI = 'postgresql://benji@localhost:5432/job_postings'
 
     # Flask-babel: http://pythonhosted.org/Flask-Babel/
     ACCEPT_LANGUAGES = ['zh']
